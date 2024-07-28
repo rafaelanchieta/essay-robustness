@@ -115,15 +115,30 @@ def update_corpus() -> None:
     Update the corpus
     :return:
     """
-    corpus = Corpus()
-    train, _, _ = corpus.read_splits()
-    train['c1'] = train['competence'].str[0]
-    train['c2'] = train['competence'].str[1]
-    train['c3'] = train['competence'].str[2]
-    train['c4'] = train['competence'].str[3]
-    train['c5'] = train['competence'].str[4]
-    train.drop(columns=['competence'], inplace=True)
-    train.to_csv('essay-br/splits/train.csv', index=False, header=True)
+    # corpus = Corpus()
+    # _, _, test = corpus.read_splits()
+    path = 'adversarial/'
+    for file in os.listdir(path):
+        if file.endswith('.csv'):
+            df = pd.read_csv(os.path.join(path, file), converters={'essay': eval, 'competence': eval})
+            df['c1'] = df['competence'].str[0]
+            df['c2'] = df['competence'].str[1]
+            df['c3'] = df['competence'].str[2]
+            df['c4'] = df['competence'].str[3]
+            df['c5'] = df['competence'].str[4]
+            df.drop(columns=['competence'], inplace=True)
+            df.to_csv('updated_adversarial/'+file, index=False, header=True)
+            logger.info(file + ' saved in updated_adversarial/')
+    '''
+    good = pd.read_csv('essay-br/splits/good_essays.csv', converters={'essay': eval, 'competence': eval})
+    good['c1'] = good['competence'].str[0]
+    good['c2'] = good['competence'].str[1]
+    good['c3'] = good['competence'].str[2]
+    good['c4'] = good['competence'].str[3]
+    good['c5'] = good['competence'].str[4]
+    good.drop(columns=['competence'], inplace=True)
+    good.to_csv('essay-br/splits/good.csv', index=False, header=True)
+    '''
 
 
 if __name__ == '__main__':
