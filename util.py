@@ -108,3 +108,23 @@ def split_stratified_into_train_val_test(df_input, stratify_colname='y', frac_tr
     assert len(df_input) == len(df_train) + len(df_val) + len(df_test)
 
     return df_train, df_val, df_test
+
+
+def update_corpus() -> None:
+    """
+    Update the corpus
+    :return:
+    """
+    corpus = Corpus()
+    train, _, _ = corpus.read_splits()
+    train['c1'] = train['competence'].str[0]
+    train['c2'] = train['competence'].str[1]
+    train['c3'] = train['competence'].str[2]
+    train['c4'] = train['competence'].str[3]
+    train['c5'] = train['competence'].str[4]
+    train.drop(columns=['competence'], inplace=True)
+    train.to_csv('essay-br/splits/train.csv', index=False, header=True)
+
+
+if __name__ == '__main__':
+    update_corpus()
